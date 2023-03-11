@@ -11,14 +11,23 @@
 #include <iostream>
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
+#include <fstream>
 
 using boost::asio::ip::tcp;
 
-constexpr size_t image_size = 100*100;
+//Exact number of bytes have been found on the properties of the "cat.jpg" image. 
+constexpr size_t image_size = 17618;
 
 void save_image(char* data, size_t len)
 {
-  // TODO
+  //Creates and opens a file called "copycat.jpg"
+  std::ofstream file("copycat.jpg");
+  
+  //Writes the content of data to the file
+  file.write((char*) &data[0], len);
+
+  //Closes file
+  file.close();
 }
 
 int main(int argc, char* argv[])
@@ -50,6 +59,7 @@ int main(int argc, char* argv[])
 
       if (error == boost::asio::error::eof)
         break; // Connection closed cleanly by peer.
+
       else if (error)
         throw boost::system::system_error(error); // Some other error.
 
@@ -60,6 +70,6 @@ int main(int argc, char* argv[])
   {
     std::cerr << e.what() << std::endl;
   }
-
+  
   return 0;
 }

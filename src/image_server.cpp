@@ -12,12 +12,32 @@
 #include <iostream>
 #include <string>
 #include <boost/asio.hpp>
+#include <fstream>
+#include <vector>
+typedef unsigned char BYTE;
 
 using boost::asio::ip::tcp;
 
-std::vector<uint8_t> get_image()
-{
-  return std::vector<uint8_t>();
+std::vector<BYTE> get_image()
+{ 
+
+  std::streampos fileSize;
+
+  // Opens file as binary data
+  std::ifstream file("cat.jpg", std::ios::binary);
+
+    // Gets the size of the file 
+  file.seekg(0, std::ios::end);
+  fileSize = file.tellg();
+  file.seekg(0, std::ios::beg);
+
+    // Read the data from the file into a byte vector
+  std::vector<BYTE> fileData(fileSize);
+  
+  file.read((char*) &fileData[0], fileSize);
+
+  //Returns the byte vector containing the data
+  return fileData;
 }
 
 int main()
