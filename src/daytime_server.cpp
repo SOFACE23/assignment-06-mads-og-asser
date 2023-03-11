@@ -15,9 +15,10 @@
 
 using boost::asio::ip::tcp;
 
+//This function creates a string with data about date and time. 
 std::string make_daytime_string()
 {
-  using namespace std; // For time_t, time and ctime;
+  using namespace std; 
   time_t now = time(0);
   return ctime(&now);
 }
@@ -26,18 +27,27 @@ int main()
 {
   try
   {
+    //Constructor for I/O context. 
     boost::asio::io_context io_context;
 
+    //Acceptor is used when accepting new sockets. 
     tcp::acceptor acceptor(io_context, tcp::endpoint(tcp::v4(), 13));
 
     while (true)
     {
+      //Constructor socket
       tcp::socket socket(io_context);
+
+      //The accepter accepts the socket
       acceptor.accept(socket);
 
+      //Creates the string containing date and time for the message.  
       std::string message = make_daytime_string();
 
+      //Constructs error_code
       boost::system::error_code ignored_error;
+
+      //Writes the message 
       boost::asio::write(socket, boost::asio::buffer(message), ignored_error);
     }
   }
